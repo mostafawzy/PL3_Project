@@ -13,25 +13,29 @@ type Form2() as this =
     let button2 = new Button()
     let panelContent = new Panel()
     let textBoxInput = new TextBox()
-    let textBoxOutput = new TextBox()
     let labelInput = new Label()
     let labelOutput = new Label()
+    let pictureBoxIcon = new PictureBox()  
+
+    let createPanelWithLabel text location size color =
+        let panel = new Panel(Size = size, Location = location, BackColor = color)
+        let label = new Label(Text = text, Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(5, 16))
+        panel.Controls.Add(label)
+        panel
 
     do
-         // Panel Header
+        // Panel Header
         panelHeader.BackColor <- Color.FromArgb(64, 122, 97)
         panelHeader.Dock <- DockStyle.Top
         panelHeader.Size <- Size(1100, 80)
         labelTitle.Text <- "Text Analyzer"
         labelTitle.Font <- new Font("Century Gothic", 20.0F)
         labelTitle.ForeColor <- Color.White
-        labelTitle.AutoSize <- true 
-        labelTitle.TextAlign <- ContentAlignment.MiddleRight 
-        labelTitle.Location <- Point(panelHeader.Width - labelTitle.Width - 100, (panelHeader.Height - labelTitle.Height) / 2) 
-
+        labelTitle.AutoSize <- true
+        labelTitle.TextAlign <- ContentAlignment.MiddleRight
+        labelTitle.Location <- Point(panelHeader.Width - labelTitle.Width - 100, (panelHeader.Height - labelTitle.Height) / 2)
         panelHeader.Controls.Add(labelTitle)
 
-        
         // Sidebar Panel
         panelSidebar.BackColor <- Color.FromArgb(236, 226, 221)
         panelSidebar.Dock <- DockStyle.Left
@@ -72,40 +76,49 @@ type Form2() as this =
         textBoxInput.Font <- new Font("Century Gothic", 10.0F)
         textBoxInput.Multiline <- true
         textBoxInput.ScrollBars <- ScrollBars.Vertical
-        textBoxInput.Size <- Size(860, 157)
+        textBoxInput.Size <- Size(660, 137)
         textBoxInput.Location <- Point(20, 50)
 
-        labelOutput.Text <- "Output Data:"
+        let panel7 = createPanelWithLabel "Most Frequent Words:" (Point(693, 50)) (Size(218, 137)) (Color.FromArgb(255, 230, 255))
+
+        labelOutput.Text <- "Output:"
         labelOutput.Font <- new Font("Century Gothic", 12.0F)
-        labelOutput.Location <- Point(20, 210)
+        labelOutput.Location <- Point(20, 193)
 
-        textBoxOutput.Font <- new Font("Century Gothic", 10.0F)
-        textBoxOutput.Multiline <- true
-        textBoxOutput.ReadOnly <- true
-        textBoxOutput.ScrollBars <- ScrollBars.Vertical
-        textBoxOutput.Size <- Size(860, 335)
-        textBoxOutput.Location <- Point(20, 240)
+        // Panels with labels for each output item
+        let panel1 = createPanelWithLabel "Readability Score:" (Point(276, 357)) (Size(232, 100)) (Color.FromArgb(230, 230, 255))
+        let panel2 = createPanelWithLabel "Paragraph Count:" (Point(25, 357)) (Size(232, 100)) (Color.FromArgb(230, 255, 230))
+        let panel3 = createPanelWithLabel "Word Count:" (Point(25, 234)) (Size(232, 100)) (Color.FromArgb(255, 230, 230))
+        let panel4 = createPanelWithLabel "Average Sentence Length:" (Point(533, 234)) (Size(375, 60)) (Color.FromArgb(255, 255, 230))
+        let panel5 = createPanelWithLabel "Sentence Count:" (Point(276, 234)) (Size(232, 100)) (Color.FromArgb(230, 255, 255))
+        let panel6 = createPanelWithLabel "Most Frequent Words:" (Point(533, 317)) (Size(375, 140)) (Color.FromArgb(255, 230, 255))
 
-        // Add controls to content panel
+        panelContent.Controls.AddRange([| panel1; panel2; panel3; panel4; panel5; panel6 |])
         panelContent.Controls.Add(labelInput)
         panelContent.Controls.Add(textBoxInput)
         panelContent.Controls.Add(labelOutput)
-        panelContent.Controls.Add(textBoxOutput)
 
-        // Add panels to form
+        // PictureBox for the icon
+        pictureBoxIcon.Location <- Point(730, 50)
+        pictureBoxIcon.Size <- Size(140, 137)
+        pictureBoxIcon.Image <- Image.FromFile("1.png")  
+        pictureBoxIcon.SizeMode <- PictureBoxSizeMode.StretchImage 
+        panelContent.Controls.Add(pictureBoxIcon)
+
+        
         this.Controls.Add(panelContent)
         this.Controls.Add(panelSidebar)
         this.Controls.Add(panelHeader)
 
-        // Set form properties
-        this.ClientSize <- Size(1100, 600)
+       
+        this.ClientSize <- Size(1130, 600)
         this.Text <- "Text Analyzer"
         this.TransparencyKey <- Color.AntiqueWhite
-
+        this.StartPosition <- FormStartPosition.CenterScreen
 
 [<EntryPoint>]
 let main argv =
     Application.EnableVisualStyles()
     Application.SetCompatibleTextRenderingDefault(false)
-    Application.Run(new Form2()) 
-    0 
+    Application.Run(new Form2())
+    0
