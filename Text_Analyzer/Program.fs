@@ -15,7 +15,7 @@ type Form2() as this =
     let textBoxInput = new TextBox()
     let labelInput = new Label()
     let labelOutput = new Label()
-    let pictureBoxIcon = new PictureBox()  // PictureBox for the icon
+    let pictureBoxIcon = new PictureBox()  
 
     let createPanelWithLabel text location size color =
         let panel = new Panel(Size = size, Location = location, BackColor = color)
@@ -98,19 +98,19 @@ type Form2() as this =
         panelContent.Controls.Add(textBoxInput)
         panelContent.Controls.Add(labelOutput)
 
-        // Add the PictureBox for the icon
+        // PictureBox for the icon
         pictureBoxIcon.Location <- Point(730, 50)
         pictureBoxIcon.Size <- Size(140, 137)
-        pictureBoxIcon.Image <- Image.FromFile("1.png")  // Replace with the actual path to your icon file
-        pictureBoxIcon.SizeMode <- PictureBoxSizeMode.StretchImage  // Optional: adjust the image size within the PictureBox
+        pictureBoxIcon.Image <- Image.FromFile("1.png")  
+        pictureBoxIcon.SizeMode <- PictureBoxSizeMode.StretchImage 
         panelContent.Controls.Add(pictureBoxIcon)
 
-        // Add panels to form
+        
         this.Controls.Add(panelContent)
         this.Controls.Add(panelSidebar)
         this.Controls.Add(panelHeader)
 
-        // Set form properties
+       
         this.ClientSize <- Size(1130, 600)
         this.Text <- "Text Analyzer"
         this.TransparencyKey <- Color.AntiqueWhite
