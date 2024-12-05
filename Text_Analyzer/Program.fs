@@ -1,6 +1,6 @@
-﻿open System
-open System.Windows.Forms
+﻿open System.Windows.Forms
 open System.Drawing
+
 
 type Form2() as this =
     inherit Form()
@@ -14,30 +14,28 @@ type Form2() as this =
     let panelContent = new Panel()
     let textBoxInput = new TextBox()
     let labelInput = new Label()
-    let labelOutput = new Label()
     let pictureBoxIcon = new PictureBox()  
 
-    let createPanelWithLabel text location size color =
+    
+    let createPanel location size color =
         let panel = new Panel(Size = size, Location = location, BackColor = color)
-        let label = new Label(Text = text, Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(5, 16))
-        panel.Controls.Add(label)
         panel
 
     do
         // Panel Header
-        panelHeader.BackColor <- Color.FromArgb(64, 122, 97)
+        panelHeader.BackColor <- ColorTranslator.FromHtml("#367CAF")
         panelHeader.Dock <- DockStyle.Top
         panelHeader.Size <- Size(1100, 80)
         labelTitle.Text <- "Text Analyzer"
-        labelTitle.Font <- new Font("Century Gothic", 20.0F)
+        labelTitle.Font <- new Font("Century Gothic", 25.0F)
         labelTitle.ForeColor <- Color.White
         labelTitle.AutoSize <- true
         labelTitle.TextAlign <- ContentAlignment.MiddleRight
-        labelTitle.Location <- Point(panelHeader.Width - labelTitle.Width - 100, (panelHeader.Height - labelTitle.Height) / 2)
+        labelTitle.Location <- Point(840,21)
         panelHeader.Controls.Add(labelTitle)
 
         // Sidebar Panel
-        panelSidebar.BackColor <- Color.FromArgb(236, 226, 221)
+        panelSidebar.BackColor <- ColorTranslator.FromHtml("#ece0d0") 
         panelSidebar.Dock <- DockStyle.Left
         panelSidebar.Size <- Size(200, 646)
 
@@ -65,7 +63,7 @@ type Form2() as this =
         panelSidebar.Controls.Add(button2)
 
         // Content Panel
-        panelContent.BackColor <- Color.FromArgb(248, 241, 244)
+        panelContent.BackColor <- ColorTranslator.FromHtml("#fcfcf4")  
         panelContent.Dock <- DockStyle.Fill
         panelContent.Size <- Size(1000, 646)
 
@@ -79,24 +77,27 @@ type Form2() as this =
         textBoxInput.Size <- Size(660, 137)
         textBoxInput.Location <- Point(20, 50)
 
-        let panel7 = createPanelWithLabel "Most Frequent Words:" (Point(693, 50)) (Size(218, 137)) (Color.FromArgb(255, 230, 255))
+       
 
-        labelOutput.Text <- "Output:"
-        labelOutput.Font <- new Font("Century Gothic", 12.0F)
-        labelOutput.Location <- Point(20, 193)
+        // Output labels positioned above the panels
+        let panel1Label = new Label(Text = "Readability Score:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 357))
+        let panel2Label = new Label(Text = "Paragraph Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 357))
+        let panel3Label = new Label(Text = "Word Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 234))
+        let panel5Label = new Label(Text = "Sentence Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 234))
+        let panel6Label = new Label(Text = "Most Frequent Words:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(533, 234))
 
-        // Panels with labels for each output item
-        let panel1 = createPanelWithLabel "Readability Score:" (Point(276, 357)) (Size(232, 100)) (Color.FromArgb(230, 230, 255))
-        let panel2 = createPanelWithLabel "Paragraph Count:" (Point(25, 357)) (Size(232, 100)) (Color.FromArgb(230, 255, 230))
-        let panel3 = createPanelWithLabel "Word Count:" (Point(25, 234)) (Size(232, 100)) (Color.FromArgb(255, 230, 230))
-        let panel4 = createPanelWithLabel "Average Sentence Length:" (Point(533, 234)) (Size(375, 60)) (Color.FromArgb(255, 255, 230))
-        let panel5 = createPanelWithLabel "Sentence Count:" (Point(276, 234)) (Size(232, 100)) (Color.FromArgb(230, 255, 255))
-        let panel6 = createPanelWithLabel "Most Frequent Words:" (Point(533, 317)) (Size(375, 140)) (Color.FromArgb(255, 230, 255))
+      // Panels without inside labels
+        let panel1 = createPanel (Point(276, 387)) (Size(232, 90)) (Color.FromArgb(230, 230, 255))
+        let panel2 = createPanel (Point(25, 387)) (Size(232, 90)) (ColorTranslator.FromHtml("#eaeded"))
+        let panel3 = createPanel (Point(25, 264)) (Size(232, 90)) (Color.FromArgb(255, 230, 230))
+        let panel5 = createPanel (Point(276, 264)) (Size(232, 90)) (ColorTranslator.FromHtml("#c3eafb"))
+        let panel6 = createPanel (Point(533, 264)) (Size(355, 210)) (ColorTranslator.FromHtml("#dafada"))
 
-        panelContent.Controls.AddRange([| panel1; panel2; panel3; panel4; panel5; panel6 |])
+        panelContent.Controls.AddRange([| panel1Label; panel2Label; panel3Label; panel5Label; panel6Label |])
+        panelContent.Controls.AddRange([| panel1; panel2; panel3;panel5; panel6 |])
         panelContent.Controls.Add(labelInput)
         panelContent.Controls.Add(textBoxInput)
-        panelContent.Controls.Add(labelOutput)
+        
 
         // PictureBox for the icon
         pictureBoxIcon.Location <- Point(730, 50)
