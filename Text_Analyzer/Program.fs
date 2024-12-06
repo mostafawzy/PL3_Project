@@ -117,6 +117,7 @@ type Form2() as this =
         this.TransparencyKey <- Color.AntiqueWhite
         this.StartPosition <- FormStartPosition.CenterScreen
 
+[<STAThread>]
 [<EntryPoint>]
 let main argv =
     Application.EnableVisualStyles()
