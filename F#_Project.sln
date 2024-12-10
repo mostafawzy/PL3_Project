@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Test", "ConsoleApp1\Test.fsproj", "{34D19D2A-BDD3-4220-8F0E-F8FEC6EF0F1B}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Text_Analyzer", "Text_Analyzer\Text_Analyzer.fsproj", "{76A2A8F0-D001-461B-8D00-45BBE2D87CC6}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{34D19D2A-BDD3-4220-8F0E-F8FEC6EF0F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34D19D2A-BDD3-4220-8F0E-F8FEC6EF0F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34D19D2A-BDD3-4220-8F0E-F8FEC6EF0F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34D19D2A-BDD3-4220-8F0E-F8FEC6EF0F1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76A2A8F0-D001-461B-8D00-45BBE2D87CC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{76A2A8F0-D001-461B-8D00-45BBE2D87CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76A2A8F0-D001-461B-8D00-45BBE2D87CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
