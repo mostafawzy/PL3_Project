@@ -117,6 +117,13 @@ type Form2() as this =
         this.Text <- "Text Analyzer"
         this.TransparencyKey <- Color.AntiqueWhite
         this.StartPosition <- FormStartPosition.CenterScreen
+        
+        buttonLoadFile.Click.Add(fun _ -> 
+          use openFileDialog = new OpenFileDialog(Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*", Title = "Open Text File")
+        if openFileDialog.ShowDialog() = DialogResult.OK then
+          textBoxInput.Text <- File.ReadAllText(openFileDialog.FileName)
+)
+
 
 [<STAThread>]
 [<EntryPoint>]
