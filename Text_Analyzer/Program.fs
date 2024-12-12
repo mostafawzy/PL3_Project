@@ -21,6 +21,30 @@ type Form2() as this =
     let createPanel location size color =
         let panel = new Panel(Size = size, Location = location, BackColor = color)
         panel
+        
+    let analyzeText (text: string) =
+    let paragraphs = text.Split([|'\n'; '\r'|], StringSplitOptions.RemoveEmptyEntries)
+    let words = 
+        text.Split([|' '; '\n'; '\t'; '.'; ','; ';'; ':'; '!' ;' '|], StringSplitOptions.RemoveEmptyEntries)
+        |> Array.filter (fun word -> not (String.IsNullOrWhiteSpace(word))) 
+
+    let sentences = text.Split([|'.'; '!'; '?'|], StringSplitOptions.RemoveEmptyEntries)
+
+    let wordCount = words.Length
+    let sentenceCount = sentences.Length
+    let paragraphCount = paragraphs.Length
+    let avgSentenceLength = if sentenceCount > 0 then wordCount / sentenceCount else 0
+
+    let wordFrequency =
+        words
+        |> Seq.map (fun word -> word.ToLowerInvariant())
+        |> Seq.groupBy id
+        |> Seq.map (fun (word, occurrences) -> word, Seq.length occurrences)
+        |> Seq.sortByDescending snd
+        |> Seq.toList
+
+    wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency
+
 
     do
         // Panel Header
