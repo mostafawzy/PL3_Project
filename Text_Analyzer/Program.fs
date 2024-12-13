@@ -167,6 +167,15 @@ type Form2() as this =
          use openFileDialog = new OpenFileDialog(Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*", Title = "Open Text File")
         if openFileDialog.ShowDialog() = DialogResult.OK then
            textBoxInput.Text <- File.ReadAllText(openFileDialog.FileName)
+
+        buttonClear.Click.Add(fun _ -> 
+            textBoxInput.Clear()
+            [panel1; panel2; panel3; panel5; panel6]
+            |> List.iter (fun panel -> 
+                let label = panel.Controls.[0] :?> Label
+                label.Text <- ""
+            )
+)
 )
 [<STAThread>]
 [<EntryPoint>]
