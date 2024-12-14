@@ -1,88 +1,87 @@
 ﻿open System
 open System.Windows.Forms
 open System.Drawing
-
+open System.IO
 
 type Form2() as this =
     inherit Form()
 
+    // UI Components
     let panelHeader = new Panel()
     let labelTitle = new Label()
     let panelSidebar = new Panel()
     let buttonLoadFile = new Button()
-    let button1 = new Button()
-    let button2 = new Button()
+    let buttonAnalyze = new Button()
+    let buttonClear = new Button()
     let panelContent = new Panel()
     let textBoxInput = new TextBox()
     let labelInput = new Label()
-    let pictureBoxIcon = new PictureBox()  
+    let labelOutput = new Label()
+    let pictureBoxIcon = new PictureBox()
 
     
-    let createPanel location size color =
+    let createPanelWithLabel text location size color =
         let panel = new Panel(Size = size, Location = location, BackColor = color)
+        let label = new Label(Text = text, Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(5, 16))
+        panel.Controls.Add(label)
         panel
-        
+
+
     let analyzeText (text: string) =
-    let paragraphs = text.Split([|'\n'; '\r'|], StringSplitOptions.RemoveEmptyEntries)
-    let words = 
-        text.Split([|' '; '\n'; '\t'; '.'; ','; ';'; ':'; '!' ;' '|], StringSplitOptions.RemoveEmptyEntries)
-        |> Array.filter (fun word -> not (String.IsNullOrWhiteSpace(word))) 
 
-    let sentences = text.Split([|'.'; '!'; '?'|], StringSplitOptions.RemoveEmptyEntries)
+        let paragraphs = text.Split([|'\n'; '\r'|], StringSplitOptions.RemoveEmptyEntries)
+        
+        let words = 
+            text.Split([|' '; '\n'; '\t'; '.'; ','; ';'; ':'; '!' ;' '|], StringSplitOptions.RemoveEmptyEntries)
+            |> Array.filter (fun word -> not (String.IsNullOrWhiteSpace(word))) 
 
-    let wordCount = words.Length
-    let sentenceCount = sentences.Length
-    let paragraphCount = paragraphs.Length
-    let avgSentenceLength = if sentenceCount > 0 then wordCount / sentenceCount else 0
+        let sentences = text.Split([|'.'; '!'; '?'|], StringSplitOptions.RemoveEmptyEntries)
 
-    let wordFrequency =
-        words
-        |> Seq.map (fun word -> word.ToLowerInvariant())
-        |> Seq.groupBy id
-        |> Seq.map (fun (word, occurrences) -> word, Seq.length occurrences)
-        |> Seq.sortByDescending snd
-        |> Seq.toList
+        let wordCount = words.Length
+        let sentenceCount = sentences.Length
+        let paragraphCount = paragraphs.Length
 
-    wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency
+        let avgSentenceLength = if sentenceCount > 0 then wordCount / sentenceCount else 0
 
-    buttonAnalyze.Click.Add(fun _ -> 
-    let text = textBoxInput.Text
-    let wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency = analyzeText text
+        let wordFrequency =
+            words
+            |> Seq.map (fun word -> word.ToLowerInvariant())
+            |> Seq.groupBy id
+            |> Seq.map (fun (word, occurrences) -> word, Seq.length occurrences)
+            |> Seq.sortByDescending snd
+            |> Seq.toList
 
-    let updateLabel (panel: Panel) newText =
-        let label = panel.Controls.[0] :?> Label
-        label.Text <- newText
+        wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency
 
-    updateLabel panel1 $"    {avgSentenceLength}"
-    updateLabel panel2 $"    {paragraphCount}"
-    updateLabel panel3 $"    {wordCount}"
-    updateLabel panel5 $"    {sentenceCount}"
+    let panel1Label = new Label(Text = "Readability Score:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 357))
+    let panel2Label = new Label(Text = "Paragraph Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 357))
+    let panel3Label = new Label(Text = "Word Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 234))
+    let panel5Label = new Label(Text = "Sentence Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 234))
+    let panel6Label = new Label(Text = "Most Frequent Words:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(533, 234))
 
-    let frequentWordsText =
-        wordFrequency
-        |> List.truncate 5
-        |> List.map (fun (word, count) -> $"    {word}:   {count}")
-        |> String.concat "\n\n"
+    // Panels for output
+    let panel1 = createPanelWithLabel "" (Point(276, 387)) (Size(232, 90)) (Color.FromArgb(230, 230, 255))
+    let panel2 = createPanelWithLabel "" (Point(25, 387)) (Size(232, 90)) (ColorTranslator.FromHtml("#eaeded"))
+    let panel3 = createPanelWithLabel "" (Point(25, 264)) (Size(232, 90)) (Color.FromArgb(255, 230, 230))
+    let panel5 = createPanelWithLabel "" (Point(276, 264)) (Size(232, 90)) (ColorTranslator.FromHtml("#c3eafb"))
+    let panel6 = createPanelWithLabel ""  (Point(533, 264)) (Size(355, 210)) (ColorTranslator.FromHtml("#dafada"))
 
-    updateLabel panel6 $"{frequentWordsText}"
-)
-
-
+    
     do
-        // Panel Header
+        // Header
         panelHeader.BackColor <- ColorTranslator.FromHtml("#367CAF")
         panelHeader.Dock <- DockStyle.Top
         panelHeader.Size <- Size(1100, 80)
         labelTitle.Text <- "Text Analyzer"
-        labelTitle.Font <- new Font("Century Gothic", 25.0F)
+        labelTitle.Font <- new Font("Century Gothic", 20.0F)
         labelTitle.ForeColor <- Color.White
         labelTitle.AutoSize <- true
         labelTitle.TextAlign <- ContentAlignment.MiddleRight
-        labelTitle.Location <- Point(840,21)
+        labelTitle.Location <- Point(20, 20)
         panelHeader.Controls.Add(labelTitle)
 
-        // Sidebar Panel
-        panelSidebar.BackColor <- ColorTranslator.FromHtml("#ece0d0") 
+        // Sidebar
+        panelSidebar.BackColor <- ColorTranslator.FromHtml("#ece0d0")
         panelSidebar.Dock <- DockStyle.Left
         panelSidebar.Size <- Size(200, 646)
 
@@ -93,26 +92,25 @@ type Form2() as this =
         buttonLoadFile.FlatAppearance.BorderSize <- 0
         panelSidebar.Controls.Add(buttonLoadFile)
 
-        button1.Text <- "Analyze"
-        button1.Font <- new Font("Century Gothic", 14.0F)
-        button1.Size <- Size(200, 81)
-        button1.FlatStyle <- FlatStyle.Flat
-        button1.FlatAppearance.BorderSize <- 0
-        button1.Location <- Point(0, 87)
-        panelSidebar.Controls.Add(button1)
+        buttonAnalyze.Text <- "Analyze"
+        buttonAnalyze.Font <- new Font("Century Gothic", 14.0F)
+        buttonAnalyze.Size <- Size(200, 81)
+        buttonAnalyze.FlatStyle <- FlatStyle.Flat
+        buttonAnalyze.FlatAppearance.BorderSize <- 0
+        buttonAnalyze.Location <- Point(0, 87)
+        panelSidebar.Controls.Add(buttonAnalyze)
 
-        button2.Text <- "Clear"
-        button2.Font <- new Font("Century Gothic", 14.0F)
-        button2.Size <- Size(200, 81)
-        button2.FlatStyle <- FlatStyle.Flat
-        button2.FlatAppearance.BorderSize <- 0
-        button2.Location <- Point(0, 174)
-        panelSidebar.Controls.Add(button2)
+        buttonClear.Text <- "Clear"
+        buttonClear.Font <- new Font("Century Gothic", 14.0F)
+        buttonClear.Size <- Size(200, 81)
+        buttonClear.FlatStyle <- FlatStyle.Flat
+        buttonClear.FlatAppearance.BorderSize <- 0
+        buttonClear.Location <- Point(0, 174)
+        panelSidebar.Controls.Add(buttonClear)
 
-        // Content Panel
-        panelContent.BackColor <- ColorTranslator.FromHtml("#fcfcf4")  
+        // Content
+        panelContent.BackColor <- ColorTranslator.FromHtml("#fcfcf4")
         panelContent.Dock <- DockStyle.Fill
-        panelContent.Size <- Size(1000, 646)
 
         labelInput.Text <- "Input Text:"
         labelInput.Font <- new Font("Century Gothic", 12.0F)
@@ -124,49 +122,56 @@ type Form2() as this =
         textBoxInput.Size <- Size(660, 137)
         textBoxInput.Location <- Point(20, 50)
 
-       
-
-        // Output labels positioned above the panels
-        let panel1Label = new Label(Text = "Readability Score:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 357))
-        let panel2Label = new Label(Text = "Paragraph Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 357))
-        let panel3Label = new Label(Text = "Word Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(25, 234))
-        let panel5Label = new Label(Text = "Sentence Count:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(276, 234))
-        let panel6Label = new Label(Text = "Most Frequent Words:", Font = new Font("Century Gothic", 12.0F), AutoSize = true, Location = Point(533, 234))
-
-      // Panels without inside labels
-        let panel1 = createPanel (Point(276, 387)) (Size(232, 90)) (Color.FromArgb(230, 230, 255))
-        let panel2 = createPanel (Point(25, 387)) (Size(232, 90)) (ColorTranslator.FromHtml("#eaeded"))
-        let panel3 = createPanel (Point(25, 264)) (Size(232, 90)) (Color.FromArgb(255, 230, 230))
-        let panel5 = createPanel (Point(276, 264)) (Size(232, 90)) (ColorTranslator.FromHtml("#c3eafb"))
-        let panel6 = createPanel (Point(533, 264)) (Size(355, 210)) (ColorTranslator.FromHtml("#dafada"))
-
+        
         panelContent.Controls.AddRange([| panel1Label; panel2Label; panel3Label; panel5Label; panel6Label |])
-        panelContent.Controls.AddRange([| panel1; panel2; panel3;panel5; panel6 |])
+        panelContent.Controls.AddRange([| panel1; panel2; panel3; panel5; panel6 |])
         panelContent.Controls.Add(labelInput)
         panelContent.Controls.Add(textBoxInput)
-        
 
-        // PictureBox for the icon
+        // Icon
         pictureBoxIcon.Location <- Point(730, 50)
         pictureBoxIcon.Size <- Size(140, 137)
-        pictureBoxIcon.Image <- Image.FromFile("1.png")  
-        pictureBoxIcon.SizeMode <- PictureBoxSizeMode.StretchImage 
+        pictureBoxIcon.Image <- Image.FromFile("1.png")
+        pictureBoxIcon.SizeMode <- PictureBoxSizeMode.StretchImage
         panelContent.Controls.Add(pictureBoxIcon)
 
         
         this.Controls.Add(panelContent)
         this.Controls.Add(panelSidebar)
         this.Controls.Add(panelHeader)
-
-       
         this.ClientSize <- Size(1130, 600)
         this.Text <- "Text Analyzer"
-        this.TransparencyKey <- Color.AntiqueWhite
         this.StartPosition <- FormStartPosition.CenterScreen
-         buttonLoadFile.Click.Add(fun _ -> 
-         use openFileDialog = new OpenFileDialog(Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*", Title = "Open Text File")
-        if openFileDialog.ShowDialog() = DialogResult.OK then
-           textBoxInput.Text <- File.ReadAllText(openFileDialog.FileName)
+
+        // Button event handlers
+        buttonLoadFile.Click.Add(fun _ -> 
+            use openFileDialog = new OpenFileDialog(Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*", Title = "Open Text File")
+            if openFileDialog.ShowDialog() = DialogResult.OK then
+                textBoxInput.Text <- File.ReadAllText(openFileDialog.FileName)
+        )
+
+        buttonAnalyze.Click.Add(fun _ ->   
+              let text = textBoxInput.Text
+              let wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency = analyzeText text
+            
+              let updateLabel (panel: Panel) newText =
+                  let label = panel.Controls.[0] :?> Label
+                  label.Text <- newText
+            
+              updateLabel panel1 $"    {avgSentenceLength}"
+              updateLabel panel2 $"    {paragraphCount}"
+              updateLabel panel3 $"    {wordCount}"
+              updateLabel panel5 $"    {sentenceCount}"
+            
+              let frequentWordsText =
+                  wordFrequency
+                  |> List.truncate 5
+                  |> List.map (fun (word, count) -> $"    {word}:   {count}")
+                  |> String.concat "\n\n"
+            
+              updateLabel panel6 $"{frequentWordsText}"
+        )
+
 
         buttonClear.Click.Add(fun _ -> 
             textBoxInput.Clear()
@@ -175,8 +180,8 @@ type Form2() as this =
                 let label = panel.Controls.[0] :?> Label
                 label.Text <- ""
             )
-)
-)
+        )
+
 [<STAThread>]
 [<EntryPoint>]
 let main argv =
