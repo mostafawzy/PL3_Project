@@ -100,6 +100,31 @@ type Form2() as this =
         buttonAnalyze.Location <- Point(0, 87)
         panelSidebar.Controls.Add(buttonAnalyze)
 
+buttonAnalyze.Click.Add(fun _ -> 
+    if String.IsNullOrWhiteSpace(textBoxInput.Text) then
+        ignore (System.Windows.Forms.MessageBox.Show("Please enter text or load a file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error))
+    else    
+        let text = textBoxInput.Text
+        let wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency = analyzeText text
+        
+        let updateLabel (panel: Panel) newText =
+            let label = panel.Controls.[0] :?> Label
+            label.Text <- newText
+        
+        updateLabel panel1 $"    {avgSentenceLength}"
+        updateLabel panel2 $"    {paragraphCount}"
+        updateLabel panel3 $"    {wordCount}"
+        updateLabel panel5 $"    {sentenceCount}"
+        
+        let frequentWordsText =
+            wordFrequency
+            |> List.truncate 5
+            |> List.map (fun (word, count) -> $"    {word}:   {count}")
+            |> String.concat "\n\n"
+        
+        updateLabel panel6 $"{frequentWordsText}"
+)
+
         buttonClear.Text <- "Clear"
         buttonClear.Font <- new Font("Century Gothic", 14.0F)
         buttonClear.Size <- Size(200, 81)
