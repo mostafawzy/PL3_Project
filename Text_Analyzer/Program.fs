@@ -29,10 +29,10 @@ type Form2() as this =
 
     let analyzeText (text: string) =
 
-        let paragraphs = text.Split([|'\n'; '\r'|], StringSplitOptions.RemoveEmptyEntries)
+        let paragraphs = text.Split([|'\n';'\r'|], StringSplitOptions.RemoveEmptyEntries)
         
         let words = 
-            text.Split([|' '; '\n'; '\t'; '.'; ','; ';'; ':'; '!' ;' '|], StringSplitOptions.RemoveEmptyEntries)
+            text.Split([|' '; '\n'; '\t'; '.'; ','; ';'; ':'; '!'|], StringSplitOptions.RemoveEmptyEntries)
             |> Array.filter (fun word -> not (String.IsNullOrWhiteSpace(word))) 
 
         let sentences = text.Split([|'.'; '!'; '?'|], StringSplitOptions.RemoveEmptyEntries)
@@ -46,7 +46,7 @@ type Form2() as this =
         let wordFrequency =
             words
             |> Seq.map (fun word -> word.ToLowerInvariant())
-            |> Seq.groupBy id
+            |> Seq.groupBy id 
             |> Seq.map (fun (word, occurrences) -> word, Seq.length occurrences)
             |> Seq.sortByDescending snd
             |> Seq.toList
@@ -144,12 +144,18 @@ type Form2() as this =
         this.StartPosition <- FormStartPosition.CenterScreen
 
         // Button event handlers
-     buttonAnalyze.Click.Add(fun _ -> 
-    if String.IsNullOrWhiteSpace(textBoxInput.Text) then
-        ignore (System.Windows.Forms.MessageBox.Show("Please enter text or load a file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error))
-    else    
-        let text = textBoxInput.Text
-        let wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency = analyzeText text
+        buttonLoadFile.Click.Add(fun _ -> 
+            use openFileDialog = new OpenFileDialog(Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*", Title = "Open Text File")
+            if openFileDialog.ShowDialog() = DialogResult.OK then
+                textBoxInput.Text <- File.ReadAllText(openFileDialog.FileName)
+        )
+
+        buttonAnalyze.Click.Add(fun _ -> 
+          if String.IsNullOrWhiteSpace(textBoxInput.Text) then
+                ignore (System.Windows.Forms.MessageBox.Show("Please enter text or load a file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error))
+          else    
+              let text = textBoxInput.Text
+              let wordCount, sentenceCount, paragraphCount, avgSentenceLength, wordFrequency = analyzeText text
             
               let updateLabel (panel: Panel) newText =
                   let label = panel.Controls.[0] :?> Label
